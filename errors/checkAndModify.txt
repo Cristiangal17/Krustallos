@@ -1,8 +1,7 @@
 Some Rings were sold in the website.
-Add the amount of each child sold for the parents:
+Add the amount of each child sold:
 B5RSA002P0
 B5RSA003P0
 B5RSA004P0
-B5RSA005P0
 B5RSA006P0
 B5RSA007P0

@@ -161,14 +161,13 @@ if __name__ == '__main__':
     sInfoCols = ["Item Id", "Existing Available Quantity"]
     searsColNames = columnNames(searInfoLocal, sRowNameStart , searsSheetNum)
     searsInfoOpen = open_workbook(searInfoLocal)
-    searsSheet = searsInfoOpen.sheet_by_index(searsSheetNum)
-    sRows = searsSheet.nrows
-    sCols = searsSheet.ncols
+    searsInfoSheet = searsInfoOpen.sheet_by_index(searsSheetNum)
+    sRows = searsInfoSheet.nrows
+    sCols = searsInfoSheet.ncols
 
-    searsInv = inventoryDict(searsSheet, searsColNames, sInfoCols , sInfoStart)
+    searsInv = inventoryDict(searsInfoSheet, searsColNames, sInfoCols , sInfoStart)
 
     #print("Sears Col Names", searsColNames)
-    print("SearsInv" , searsInv)
 
     
     newWorkbook = Workbook()
@@ -200,7 +199,6 @@ if __name__ == '__main__':
 
 
 
-        parentDict = OrderedDict()
         modifyItems = []
         children = 0
         parentRowNum = 0
@@ -303,8 +301,10 @@ if __name__ == '__main__':
                     else:
                         ###Change so that a 0 is placed if an item is not there
                         ###ATM it leaves a blank space
-                        pass
-
+                        soldInPos = 0
+                        currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = soldStoreCol +1)
+                        currentCell.value = soldInPos
+                        soldPos += soldInPos
 
                 except KeyError:
                     if 'pos' in incorrectDict.keys():
@@ -319,7 +319,6 @@ if __name__ == '__main__':
                     
                     if item not in ["", " "]:
                         amazonInventory = amazonInv[item]
-                        
                         currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = amazonCol +1)
                         currentCell.value = item
 
@@ -334,8 +333,10 @@ if __name__ == '__main__':
                     else:
                         ###Change so that a 0 is placedif an item is not there
                         ###ATM it leaves a blank space
-                        pass
-
+                        soldInAma = 0
+                        currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = soldAmaCol +1)
+                        currentCell.value = soldInAma
+                        soldAma += soldInAma
                     
                 except KeyError:
                     if 'amazon' in incorrectDict.keys():
@@ -361,13 +362,13 @@ if __name__ == '__main__':
                     if websiteInventory != inventorySheet.cell_value(parentRowNum,finalQtyCol):
                         startAmount = inventorySheet.cell_value(parentRowNum , startQty)
                         alreadySold = inventorySheet.cell_value(parentRowNum , soldWebCol)
-                        soldInWeb = (startAmount - websiteInventory) + alreadySold
+                        soldInWeb = inventorySheet.cell_value(r , soldWebCol)
                         if item not in modifyItems:
                             modifyItems.append(item)
 
                         currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = soldWebCol +1)
                         currentCell.value = inventorySheet.cell_value(r,soldWebCol)
-                        soldWeb = soldInWeb
+                        soldWeb = (startAmount - websiteInventory) + alreadySold
 
                         
                     
@@ -399,32 +400,62 @@ if __name__ == '__main__':
                         currentCell.value = soldInEbay
                         soldEbay += soldInEbay
                     else:
-                        ###Change so that a 0 is placedif an item is not there
-                        ###ATM it leaves a blank space
-                        pass
+                        #puts a 0 if there is no name for this item in this store in the main file
+                        soldInEbay = 0
+                        currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = soldEbayCol +1)
+                        currentCell.value = soldInEbay
+                        soldEbay += soldInEbay
+                        
 
                     
                 except KeyError:
                     if 'ebay' in incorrectDict.keys():
                         incorrectDict['ebay'].append(inventorySheet.cell_value(r,ebayCol))
                     else:
-                            incorrectDict['ebay'] = [inventorySheet.cell_value(r,ebayCol)]
+                        incorrectDict['ebay'] = [inventorySheet.cell_value(r,ebayCol)]
 
 
 
-##                try:
-##                    item = inventorySheet.cell_value(r,searsCol)
-##                    if item not in ["", " "]:
-##                        searsInventory
-##                    searsName = posInv[inventorySheet.cell_value(r,columnNames["Sears Name"])]
-##                except KeyError:
-##                    pass
+                try:
+                    item = inventorySheet.cell_value(r,searsCol)
+                    if item not in ["", " "]:
+                        searsInventory = searsInv[item]
+
+                        currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = searsCol +1)
+                        currentCell.value = item
+
+                        startAmount = inventorySheet.cell_value(r , startQty)
+                        alreadySold = inventorySheet.cell_value(r , soldSearsCol)
+                        soldInSears = (startAmount - searsInventory) + alreadySold
+
+                        currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = soldSearsCol +1)
+                        currentCell.value = soldInSears
+                        soldSears += soldInSears
+                    else:
+                        soldInSears = 0
+                        currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = soldSearsCol +1)
+                        currentCell.value = soldInEbay
+                        soldEbay += soldInEbay
+                        
+                    searsName = posInv[inventorySheet.cell_value(r,columnNames["Sears Name"])]
+                except KeyError:
+                    if 'sears' in incorrectDict.keys():
+                        incorrectDict['sears'].append(inventorySheet.cell_value(r,searsCol))
+                    else:
+                        incorrectDict['sears'] = [inventorySheet.cell_value(r,searsCol)]
+
+                        
+
+                #Calculates the total sold for each child
                 
-
+                currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = totalCol +1)
+                soldBefore = inventorySheet.cell_value(r , totalCol)
+                currentCell.value = soldBefore + (soldInPos + soldInAma + soldInEbay + soldInWeb + soldInSears)
+                
                 #calculates the final amount for each child
                 currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = finalQtyCol +1)
-                currentCell.value = soldInAma + soldInEbay + soldInWeb + soldInPos
-                
+                currentCell.value = startAmount - (soldInAma + soldInEbay + soldInPos + soldInSears + soldBefore)
+
                 try:
                     relation = inventorySheet.cell_value(r + 1,relationCol)
                     if relation == "Child":
@@ -435,8 +466,7 @@ if __name__ == '__main__':
                     itemName = inventorySheet.cell_value(parentRowNum , posCol)
                     startingQty = inventorySheet.cell_value(parentRowNum , startQty)
                     
-                    currentCell = wSheet.cell(row = parentRowNum - invInfoStart + 2 ,column = totalCol +1)
-                    currentCell.value = totalSold
+
                     
                     currentCell = wSheet.cell(row = parentRowNum - invInfoStart + 2  ,column = soldStoreCol + 1)
                     soldBefore = inventorySheet.cell_value(r , soldStoreCol)
@@ -454,9 +484,16 @@ if __name__ == '__main__':
                     soldBefore = inventorySheet.cell_value(r , soldWebCol)
                     currentCell.value = soldBefore + soldWeb
 
+                    currentCell = wSheet.cell(row = parentRowNum - invInfoStart + 2  ,column = soldSearsCol + 1)
+                    soldBefore = inventorySheet.cell_value(r , soldSearsCol)
+                    currentCell.value = soldBefore + soldSears
+
+                    currentCell = wSheet.cell(row = parentRowNum - invInfoStart + 2 ,column = totalCol +1)
+                    soldBefore = inventorySheet.cell_value(parentRowNum , totalCol)
+                    currentCell.value = soldBefore + (soldPos + soldAma + soldEbay + soldWeb + soldSears)
+
                     currentCell = wSheet.cell(row = (parentRowNum - invInfoStart + 2) ,column = finalQtyCol + 1)
-                    currentCell.value = startingQty - (soldPos + soldAma + soldEbay + soldWeb)
-                    parentDict[itemName] = startingQty - (soldPos + soldAma + soldEbay + soldWeb)
+                    currentCell.value = startingQty - (soldPos + soldAma + soldEbay + soldWeb + soldSears)
                     
 
                     soldHis = 0
@@ -593,7 +630,6 @@ if __name__ == '__main__':
                     
                         if c == columnNames["Sold in Sears"]:
                             soldSears = startAmount - avaliableSears
-                            print("Sold Sears", soldSears)
                             if soldSears == startAmount:
                                 currentCell.value = 0
                                 soldSears = 0
@@ -634,10 +670,11 @@ if __name__ == '__main__':
 
     modify = "checkAndModify.txt"
     with open(modify, 'w') as mod:
-        mod.write("Some Rings were sold in the website.\nAdd the amount of each child sold for the parents:" + "\n")
-        for i in modifyItems:
-            mod.write(i + "\n")
-            
+        if modifyItems != []:
+            mod.write("Some Rings were sold in the website.\nAdd the amount of each child sold:" + "\n")
+            for i in modifyItems:
+                mod.write(i + "\n")
+                
  
                 
     os.rename(os.path.join(os.getcwd(),modify),os.path.join(os.getcwd(), "errors", modify))
@@ -675,6 +712,9 @@ if __name__ == '__main__':
     posInvUpdateWb = Workbook()
     posSheet = posInvUpdateWb.active
 
+    searsInvUpdateWb = Workbook()
+    searsSheet = searsInvUpdateWb.active
+
 
 ################################################################################
 ### HERE IS WHERE IT SHOULD repopulate THE TEMPLATES TO REUPLOAD###
@@ -683,7 +723,8 @@ if __name__ == '__main__':
     newPosInv = OrderedDict()
     newAmaInv = OrderedDict()
     newEbayInv = OrderedDict()
-    newWebInv = parentDict
+    newWebInv = OrderedDict()
+    newSearsInv = OrderedDict()
     
     productNotOnMaster = OrderedDict()
         
@@ -702,10 +743,15 @@ if __name__ == '__main__':
             amazonName = ""
             ebayName = ""
             websiteName = ""
+            searsName = ""
             
             for c in range(cols):
                 currentCell = wSheet.cell(row = r + 1 ,column = c+1)
                 #print(inventorySheet.cell_value(r,c))
+
+                if inventorySheet.cell_value(r, relationCol) == "Parent":
+                    newWebInv[inventorySheet.cell_value(r ,c)] = inventorySheet.cell_value(r ,finalQtyCol)
+                    
 
                 if inventorySheet.cell_value(r, relationCol) != "Parent":
                     if inventorySheet.cell_value(r, relationCol) != "Child":
@@ -720,12 +766,17 @@ if __name__ == '__main__':
                         
                     if c == columnNames["Ebay Custom Label"]:
                         ebayName = inventorySheet.cell_value(r ,c)
+
+                    if c == columnNames["Sears Name"]:
+                        searsName = inventorySheet.cell_value(r ,c)
+                        
                         
                     if c == columnNames["Qty 1"]:
                         finalAmount = inventorySheet.cell_value(r ,c)
                         newPosInv[posName] = finalAmount
                         newAmaInv[amazonName] = finalAmount
                         newEbayInv[ebayName] = finalAmount
+                        newSearsInv[searsName] = finalAmount
 
 
 
@@ -763,7 +814,7 @@ if __name__ == '__main__':
             except KeyError:
                 prow -= 1
                 ## Create files that will tell us what product ids are on the file that are not on the main file
-                print("Caught " , cellValue)
+                print(cellValue, "Missing in Amazon Col")
                 if 'amazon' in productNotOnMaster.keys():
                     productNotOnMaster['amazon'].append(cellValue)
                 else:
@@ -797,6 +848,7 @@ if __name__ == '__main__':
                     
             except KeyError:
                 prow -= 1
+                print(cellValue, "Missing in Ebay Col")
                 if 'ebay' in productNotOnMaster.keys():
                     productNotOnMaster['ebay'].append(cellValue)
                 else:
@@ -831,7 +883,7 @@ if __name__ == '__main__':
                     currCell.value = cellValue
             except KeyError:
                 prow -= 1
-                print(cellValue)
+                print(cellValue, "Missing in Web Col")
                 if 'website' in productNotOnMaster.keys():
                     productNotOnMaster['website'].append(cellValue)
                 else:
@@ -850,8 +902,8 @@ if __name__ == '__main__':
     
     prow = 1
     for r in range(1,posRows):
+        itemName = posSysSheet.cell_value(r,posColNames['Item Name'])
         try:
-            itemName = posSysSheet.cell_value(r,posColNames['Item Name'])
             quantity = newPosInv[itemName]
             for c in range(posCols):
                 cellValue = posSysSheet.cell_value(r,c)
@@ -867,7 +919,7 @@ if __name__ == '__main__':
                     currCell.value = cellValue
         except KeyError:
             prow -= 1
-            print(itemName)
+            print(itemName, "Missing in POS Col")
             if 'pos' in productNotOnMaster.keys():
                 productNotOnMaster['pos'].append(itemName)
             else:
@@ -877,8 +929,41 @@ if __name__ == '__main__':
                 
             #print(cellValue)
         
+##################################################################################
+###Repupulates the new Sears file with the new inventory###
 
+    for k,v in searsColNames.items():
+        currCell = searsSheet.cell(row = 1, column = v + 1)
+        currCell.value = k
 
+    prow = 1
+    for r in range(1,sRows):
+        itemName = searsInfoSheet.cell_value(r,searsColNames['Item Id'])
+        try:
+            quantity = newSearsInv[itemName]
+            for c in range(sCols):
+                cellValue = searsInfoSheet.cell_value(r,c)
+                currCell = searsSheet.cell(row = prow + 1, column = c+ 1)
+
+                if c == searsColNames['Updated Available Quantity']:
+                    currCell.value = quantity
+
+                if c != searsColNames['Updated Available Quantity']:
+                    currCell.value = cellValue
+
+        except KeyError:
+            prow -= 1
+            print(itemName, "Missing in Sears Col")
+            if 'sears' in productNotOnMaster.keys():
+                productNotOnMaster['sears'].append(itemName)
+            else:
+                productNotOnMaster['sears'] = [itemName]
+                
+        prow += 1
+            
+                    
+
+                
     
     
                     
@@ -898,16 +983,17 @@ if __name__ == '__main__':
 ###HERE IS THE NAMING OF THE FILES###
 
 
-    print(productNotOnMaster)
     amaUpdateFileName = "AmazonInvUpdate.xls"
     ebayUpdateFileName = "EbayInvUpdate.xls"
     webUpdateFileName = "WebInvUpdate.xls"
     posUpdateFileName = "POSInvUpdate.xls"
+    searsUpdateFileName = "SearsInvUpdate.xls"
     
     amaInvUpdateWb.save(amaUpdateFileName)
     ebayInvUpdateWb.save(ebayUpdateFileName)
     webInvUpdateWb.save(webUpdateFileName)
     posInvUpdateWb.save(posUpdateFileName)
+    searsInvUpdateWb.save(searsUpdateFileName)
 
 
 ##################################################################################
@@ -916,7 +1002,7 @@ if __name__ == '__main__':
     os.rename(os.path.join(os.getcwd(),ebayUpdateFileName),os.path.join(os.getcwd(), "Updates", ebayUpdateFileName))
     os.rename(os.path.join(os.getcwd(),webUpdateFileName),os.path.join(os.getcwd(), "Updates", webUpdateFileName))
     os.rename(os.path.join(os.getcwd(),posUpdateFileName),os.path.join(os.getcwd(), "Updates", posUpdateFileName))
-    
+    os.rename(os.path.join(os.getcwd(),searsUpdateFileName),os.path.join(os.getcwd(), "Updates", searsUpdateFileName))
 
     print("Saved updates!")
 
