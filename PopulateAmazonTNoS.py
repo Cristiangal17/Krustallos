@@ -8,7 +8,7 @@ import os
 ## Try not to use stored data
 
 def columnNames( fileDir , row, sheetNum):
-    '''This returns the column names of the file. You ave to specify where the column names are.'''
+    '''This returns the column names of the file. You gave to specify where the column names are.'''
     adict = OrderedDict()
     with open_workbook(fileDir) as mainOpen:
         sheet = mainOpen.sheet_by_index(sheetNum)
