@@ -1,0 +1,2 @@
+Some Rings were sold in the website.
+Add the amount of each child sold for the parents:

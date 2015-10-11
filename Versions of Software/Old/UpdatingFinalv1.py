@@ -35,86 +35,67 @@ def inventoryDict(sheetInfo, dictionary, items,start):
 if __name__ == '__main__':
 
 
-    amazonInfoFileName = "Amazon.xls"
+    amazonInfoFileName = "AmazonShort.xls"
     amazonInfoType = "Inventory"
-    #amazonInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", amazonInfoFileName)
-    amazonInfoLocal = os.path.join(os.getcwd(), "ToUpdate", amazonInfoFileName)
+    amazonInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", amazonInfoFileName)
     amazonInfoSheet = 1
-    aRowNameStart = 1
+    aColNameStart = 1
     aInfoStart = 2
 
-    ebayInfoFileName = "Ebay.xls"
+    ebayInfoFileName = "EbayShort.xls"
     ebayInfoType = "Inventory"
-    #ebayInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", ebayInfoFileName)
-    ebayInfoLocal = os.path.join(os.getcwd(), "ToUpdate", ebayInfoFileName)
-
+    ebayInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", ebayInfoFileName)
     ebayInfoSheet = 1
-    eRowNameStart = 1
+    eColNameStart = 1
     eInfoStart = 2
 
-    websiteInfoFileName = "Website.xls"
+    websiteInfoFileName = "WebsiteShort.xls"
     websiteInfoType = "Inventory"
-    #websiteInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", websiteInfoFileName)
-    websiteInfoLocal = os.path.join(os.getcwd(), "ToUpdate", websiteInfoFileName)
+    websiteInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", websiteInfoFileName)
     websiteInfoSheet = 1
-    wRowNameStart = 1
+    wColNameStart = 1
     wInfoStart = 2
 
     posInfoFile = "POS.xls"
     posInfoType = "Inventory"
-    #posInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", posInfoFile)
-    posInfoLocal = os.path.join(os.getcwd(), "ToUpdate", posInfoFile)
-
+    posInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", posInfoFile)
     posInfoSheet = 1
-    pRowNameStart = 1
+    pColNameStart = 1
     pInfoStart = 2
-
-    searsInfoFileName = "Sears.xls"
-    #searsInfoLocal = os.path.join(os.getcwd(), "ToUpdate", "Shortened", searsInfoFileName)
-    searsInfoLocal = os.path.join(os.getcwd(), "ToUpdate", searsInfoFileName)
-    searsInfoSheet = 3
-    sRowNameStart = 1
-    sInfoStart = 2
     
-    inventoryFileName = "AllInventory.xls"
+    inventoryFileName = "InventoryShort.xls"
     inventoryInfoLocal = os.path.join(os.getcwd(), "MainFiles", "InventoryFile", inventoryFileName)
     invSheetNum = 4
-    invRowNameStart = 10
+    invColNameStart = 10
     invInfoStart = 11
-
-
 
     
     #Here is where i change the indexes to match
     amazonInfoSheet = amazonInfoSheet - 1
-    aRowNameStart = aRowNameStart - 1
+    aColNameStart = aColNameStart - 1
     aInfoStart = aInfoStart - 1
 
     ebayInfoSheet = ebayInfoSheet - 1
-    eRowNameStart = eRowNameStart - 1
+    eColNameStart = eColNameStart - 1
     eInfoStart = eInfoStart - 1
     
     websiteInfoSheet = websiteInfoSheet - 1
-    wRowNameStart = wRowNameStart - 1
+    wColNameStart = wColNameStart - 1
     wInfoStart = wInfoStart - 1
 
     posInfoSheet = posInfoSheet - 1
-    pRowNameStart = pRowNameStart - 1
+    pColNameStart = pColNameStart - 1
     pInfoStart = pInfoStart - 1
-    
-    searsInfoSheet = searsInfoSheet - 1
-    sRowNameStart = sRowNameStart - 1
-    sInfoStart = sInfoStart - 1
 
     invSheetNum = invSheetNum - 1
-    invRowNameStart = invRowNameStart - 1
+    invColNameStart = invColNameStart - 1
     invInfoStart = invInfoStart - 1
     #end of index change
 
 
 
     aInfoCols = ["sku","quantity"]
-    amazonColNames = columnNames(amazonInfoLocal, aRowNameStart, amazonInfoSheet)
+    amazonColNames = columnNames(amazonInfoLocal, aColNameStart, amazonInfoSheet)
     amazonInfoOpen = open_workbook(amazonInfoLocal)
     amazonSheet = amazonInfoOpen.sheet_by_index(amazonInfoSheet)
     amaRows = amazonSheet.nrows
@@ -125,8 +106,8 @@ if __name__ == '__main__':
     print()
 
 
-    eInfoCols = ["CustomLabel", "Quantity"]
-    ebayColNames = columnNames(ebayInfoLocal, eRowNameStart, ebayInfoSheet)
+    eInfoCols = ["Custom Label", "Quantity Available"]
+    ebayColNames = columnNames(ebayInfoLocal, eColNameStart, ebayInfoSheet)
     ebayInfoOpen = open_workbook(ebayInfoLocal)
     ebaySheet = ebayInfoOpen.sheet_by_index(ebayInfoSheet)
     ebayRows = ebaySheet.nrows
@@ -139,7 +120,7 @@ if __name__ == '__main__':
     
 
     webInfoCols = ["Product ID", "Stock"]
-    webColNames = columnNames(websiteInfoLocal, wRowNameStart, websiteInfoSheet)
+    webColNames = columnNames(websiteInfoLocal, wColNameStart, websiteInfoSheet)
     websiteInfoOpen = open_workbook(websiteInfoLocal)
     websiteSheet = websiteInfoOpen.sheet_by_index(websiteInfoSheet)
     webRows = websiteSheet.nrows
@@ -150,7 +131,7 @@ if __name__ == '__main__':
     print()
 
     posInfoCols = ["Item Name", "Qty 1"]
-    posColNames = columnNames(posInfoLocal, pRowNameStart,posInfoSheet)
+    posColNames = columnNames(posInfoLocal, pColNameStart,posInfoSheet)
     posInfoOpen = open_workbook(posInfoLocal)
     posSysSheet = posInfoOpen.sheet_by_index(posInfoSheet)
     posRows = posSysSheet.nrows
@@ -159,19 +140,6 @@ if __name__ == '__main__':
     print("POS Inv")
     print(posInv)
     print()
-    
-    
-    
-    searsInfoCols = ["Item Id", "Existing Available Quantity"]
-    searsColNames = columnNames(searsInfoLocal, sRowNameStart, searsInfoSheet)
-    searsInfoOpen = open_workbook(searsInfoLocal)
-    searsOGSheet = searsInfoOpen.sheet_by_index(searsInfoSheet)
-    searsRows = searsOGSheet.nrows
-    searsCols = searsOGSheet.ncols
-    searsInv = inventoryDict(searsOGSheet, searsColNames, searsInfoCols, sInfoStart)
-    
-    
-    
     
     newWorkbook = Workbook()
     wSheet = newWorkbook.active
@@ -187,8 +155,8 @@ if __name__ == '__main__':
         rows = inventorySheet.nrows
         cols = inventorySheet.ncols
         
-        columnNames = columnNames(inventoryInfoLocal, invRowNameStart, invSheetNum)
-        #print(columnNames)
+        columnNames = columnNames(inventoryInfoLocal, invColNameStart, invSheetNum)
+        print(columnNames)
         revColNames = invEnumerated(columnNames)
 
         ### MAKE A DICT OF NAMES THAT DON'T EXIST IN THE STORE FILES BUT WAS PUT ON THE MAIN FILE
@@ -197,47 +165,17 @@ if __name__ == '__main__':
             
             currentCell = wSheet.cell(row = 1, column = v + 1)
             currentCell.value = k
-            
-        oldn = columnNames["Old Product ID"]
-        webn = columnNames["Website Item Name"]
-        posn = columnNames["POS Item Name"]
-        ebayn = columnNames["Ebay Custom Label"]
-        aman = columnNames["Amazon Sku"]
-        sean = columnNames["Sears Name"]
-        start = columnNames["Starting Quantity"]
-        short = columnNames["Short Description"]
-        sstore = columnNames["Sold in Store"]
-        sama = columnNames["Sold in Amazon"]
-        sebay = columnNames["Sold in Ebay"]
-        swebsite = columnNames["Sold in Website"]
-        ssears = columnNames["Sold in Sears"]
-        tsold = columnNames["Total Sold"]
-        qty = columnNames["Qty 1"]
-        
-        
-        
         for r in range(invInfoStart,rows):
-            
-            
-            itemPos = ""
-            itemAmazon = ""
-            itemWebsite = ""
-            itemEbay = ""
-            itemSears = ""
-            
-            
             startAmount = 0
             avaliablePos = 0
             avaliableWeb = 0
             avaliableAma = 0
             avaliableEbay = 0
-            avaliableSears = 0
 
             soldPos = 0
             soldAma = 0
             soldWeb = 0
             soldEbay = 0
-            soldSears = 0
             totalSold = 0
             finalAmount = 0
 
@@ -245,38 +183,34 @@ if __name__ == '__main__':
             for c in range(cols):
                 #print(r,c)
                 currentCell = wSheet.cell(row = r - invInfoStart + 2 ,column = c+1)
+                if c == columnNames["Item Number"]:
+                    currentCell.value = inventorySheet.cell_value(r ,c)
+                    
                 if c == columnNames["POS Item Name"]:
                     try:
+                        avaliablePos = posInv[inventorySheet.cell_value(r,c)]
                         currentCell.value = inventorySheet.cell_value(r,c)
-                        avaliablePos = int(posInv[inventorySheet.cell_value(r,c)])
-                        itemPos = inventorySheet.cell_value(r,c)
                     except KeyError:
                         if 'pos' in incorrectDict.keys():
                             incorrectDict['pos'].append(inventorySheet.cell_value(r,c))
                         else:
                             incorrectDict['pos'] = [inventorySheet.cell_value(r,c)]
                             
-                if c == columnNames["Old Product ID"] or c == columnNames["Price"] or c == columnNames["Type"]:
-                    currentCell.value = inventorySheet.cell_value(r,c)
                     
                 if c == columnNames["Amazon Sku"]:
                     try:
+                        avaliableAma = amazonInv[inventorySheet.cell_value(r,c)]
                         currentCell.value = inventorySheet.cell_value(r,c)
-                        avaliableAma = int(amazonInv[inventorySheet.cell_value(r,c)])
-                        itemAmazon = inventorySheet.cell_value(r,c)
                     except KeyError:
                         if 'amazon' in incorrectDict.keys():
                             incorrectDict['amazon'].append(inventorySheet.cell_value(r,c))
                         else:
                             incorrectDict['amazon'] = [inventorySheet.cell_value(r,c)]
-                        continue
                     
                 if c == columnNames["Website Item Name"]:
                     try:
+                        avaliableWeb = webInv[inventorySheet.cell_value(r,c)]
                         currentCell.value = inventorySheet.cell_value(r,c)
-                        avaliableWeb = int(webInv[inventorySheet.cell_value(r,c)])
-                        itemWebsite = inventorySheet.cell_value(r,c)
-                        
                     except KeyError:
                         if 'website' in incorrectDict.keys():
                             incorrectDict['website'].append(inventorySheet.cell_value(r,c))
@@ -285,26 +219,13 @@ if __name__ == '__main__':
                     
                 if c == columnNames["Ebay Custom Label"]:
                     try:
+                        avaliableEbay = ebayInv[inventorySheet.cell_value(r,c)]
                         currentCell.value = inventorySheet.cell_value(r,c)
-                        avaliableEbay = int(ebayInv[inventorySheet.cell_value(r,c)])
-                        itemEbay = inventorySheet.cell_value(r,c)
-                        
                     except KeyError:
                         if 'ebay' in incorrectDict.keys():
                             incorrectDict['ebay'].append(inventorySheet.cell_value(r,c))
                         else:
                             incorrectDict['ebay'] = [inventorySheet.cell_value(r,c)]
-                
-                if c == columnNames["Sears Name"]:
-                    try:
-                        currentCell.value = inventorySheet.cell_value(r,c)
-                        avaliableSears = int(searsInv[inventorySheet.cell_value(r,c)])
-                        itemSears = inventorySheet.cell_value(r,c)
-                    except KeyError:
-                        if 'sears' in incorrectDict.keys():
-                            incorrectDict['sears'].append(inventorySheet.cell_value(r,c))
-                        else:
-                            incorrectDict['sears'] = [inventorySheet.cell_value(r,c)]
                     
                 if c == columnNames["Short Description"]:
                     currentCell.value = inventorySheet.cell_value(r ,c)
@@ -314,68 +235,63 @@ if __name__ == '__main__':
                     currentCell.value = startAmount
 
                 if c == columnNames["Sold in Store"]:
-                    soldPos = inventorySheet.cell_value(r ,c)
-                    if itemPos != "":
-                        soldPos = soldPos + (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliablePos)
-                        if (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliablePos) != 0 : print("Sold In Store", itemPos)
-                        currentCell.value = soldPos
-                    if itemPos == "":
+                    soldPos = startAmount - avaliablePos
+                    if soldPos == startAmount:
+                        currentCell.value = 0
                         soldPos = 0
-                        currentCell.value = soldPos
-                            
+                    if soldPos != startAmount:
+                        if inventorySheet.cell_value(r ,c) == 0:
+                            currentCell.value = soldPos
+                        if inventorySheet.cell_value(r ,c) != 0:
+                            soldPos = inventorySheet.cell_value(r ,c) + soldPos
+                            currentCell.value = soldPos
+                    
                 if c == columnNames["Sold in Amazon"]:
-                    soldAma = inventorySheet.cell_value(r ,c)
-                    if itemAmazon != "":
-                        soldAma = soldAma + (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableAma)
-                        if (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableAma) != 0 : print("Sold In Amazon", itemAmazon)
-                        
-                        currentCell.value = soldAma
-                    if itemAmazon == "":
+                    soldAma = startAmount - avaliableAma
+                    if soldAma == startAmount:
+                        currentCell.value = 0
                         soldAma = 0
-                        currentCell.value = soldAma
-
-                        
+                    if soldAma != startAmount:
+                        if inventorySheet.cell_value(r ,c) == 0:
+                            currentCell.value = soldAma
+                        if inventorySheet.cell_value(r ,c) != 0:
+                            soldAma = inventorySheet.cell_value(r ,c) + soldAma
+                            currentCell.value = soldAma
                         
                 if c == columnNames["Sold in Ebay"]:
-                    soldEbay = inventorySheet.cell_value(r ,c)
-                    if itemEbay != "":
-                        soldEbay = soldEbay + (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableEbay)
-                        if (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableEbay) != 0 : print("Sold In Ebay", itemEbay)
-                        currentCell.value = soldEbay
-                    if itemEbay == "":
+                    soldEbay = startAmount - avaliableEbay
+                    if soldEbay == startAmount:
+                        currentCell.value = 0
                         soldEbay = 0
-                        currentCell.value = soldEbay
+                    if soldEbay != startAmount:
+                        if inventorySheet.cell_value(r ,c) == 0:
+                            currentCell.value = soldEbay
+                        if inventorySheet.cell_value(r ,c) != 0:
+                            soldEbay = inventorySheet.cell_value(r ,c) + soldEbay
+                            currentCell.value = soldEbay
                     
                 if c == columnNames["Sold in Website"]:
-                    soldWeb = inventorySheet.cell_value(r ,c)
-                    if itemWebsite != "":
-                        soldWeb = soldWeb + (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableWeb)
-                        if (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableWeb) != 0 : print("Sold In Website", itemWebsite)
-
-                        currentCell.value = soldWeb
-                    if itemWebsite == "":
+                    soldWeb = startAmount - avaliableWeb
+                    if soldWeb == startAmount:
+                        currentCell.value = 0
                         soldWeb = 0
-                        currentCell.value = soldWeb
-
-                            
-                if c == columnNames["Sold in Sears"]:
-                    soldSears = inventorySheet.cell_value(r ,c)
-                    if itemSears != "":
-                        soldSears = soldSears + (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableSears)
-                        if (inventorySheet.cell_value(r ,columnNames["Qty 1"]) - avaliableSears) != 0 : print("Sold In Sears", itemSears)
-                        currentCell.value = soldSears
-                    if itemSears == "":
-                        soldSears = 0
-                        currentCell.value = soldSears
+                    if soldWeb != startAmount:
+                        if inventorySheet.cell_value(r ,c) == 0:
+                            currentCell.value = soldWeb
+                        if inventorySheet.cell_value(r ,c) != 0:
+                            soldWeb = inventorySheet.cell_value(r ,c) + soldWeb
+                            currentCell.value = soldWeb
                         
                 
                 if c == columnNames["Total Sold"]: 
-                    totalSold = soldPos + soldAma + soldEbay + soldWeb + soldSears
-                    currentCell.value = totalSold 
-
+                    totalSold = soldPos + soldAma + soldEbay + soldWeb
+                    if inventorySheet.cell_value(r ,c) == 0:
+                        currentCell.value = totalSold 
+                    if inventorySheet.cell_value(r ,c) != 0:
+                        currentCell.value = inventorySheet.cell_value(r ,c) + totalSold
                         
                         
-                if c == columnNames["Qty 1"]:
+                if c == columnNames["Final Amount Avaliable"]:
                     currentCell.value = startAmount - totalSold
 
                 
@@ -410,9 +326,6 @@ if __name__ == '__main__':
     posInvUpdateWb = Workbook()
     posSheet = posInvUpdateWb.active
 
-    searsInvUpdateWb = Workbook()
-    searsSheet = searsInvUpdateWb.active
-    
 
 ################################################################################
 ### HERE IS WHERE IT SHOULD repopulate THE TEMPLATES TO REUPLOAD###
@@ -422,8 +335,6 @@ if __name__ == '__main__':
     newAmaInv = OrderedDict()
     newEbayInv = OrderedDict()
     newWebInv = OrderedDict()
-    newSearsInv = OrderedDict()
-    
     
     productNotOnMaster = OrderedDict()
         
@@ -444,14 +355,13 @@ if __name__ == '__main__':
             amazonName = ""
             ebayName = ""
             websiteName = ""
-            searsName = ""
             
             for c in range(cols):
                 currentCell = wSheet.cell(row = r + 1 ,column = c+1)
                 #print(inventorySheet.cell_value(r,c))
 
 
-                if c == columnNames["POS Item Name"] :
+                if c == columnNames["POS Item Name"]:
                     posName = inventorySheet.cell_value(r ,c)
                     
                 if c == columnNames["Amazon Sku"]:
@@ -463,16 +373,12 @@ if __name__ == '__main__':
                 if c == columnNames["Website Item Name"]:
                     websiteName = inventorySheet.cell_value(r ,c)
                     
-                if c == columnNames["Sears Name"]:
-                    searsName = inventorySheet.cell_value(r,c)
-                    
-                if c == columnNames["Qty 1"]:
+                if c == columnNames["Final Amount Avaliable"]:
                     finalAmount = inventorySheet.cell_value(r ,c)
                     newPosInv[posName] = finalAmount
                     newAmaInv[amazonName] = finalAmount
                     newEbayInv[ebayName] = finalAmount
                     newWebInv[websiteName] = finalAmount
-                    newSearsInv[searsName] = finalAmount
 
 
 ##################################################################################
@@ -509,13 +415,11 @@ if __name__ == '__main__':
             except KeyError:
                 prow -= 1
                 ## Create files that will tell us what product ids are on the file that are not on the main file
-                #print("Caught " , cellValue)
+                print("Caught " , cellValue)
                 if 'amazon' in productNotOnMaster.keys():
                     productNotOnMaster['amazon'].append(cellValue)
-                    
                 else:
                     productNotOnMaster['amazon'] = [cellValue]
-                break
                 
         prow += 1
                 
@@ -552,7 +456,7 @@ if __name__ == '__main__':
                     currCell.value = cellValue
             except KeyError:
                 prow -= 1
-                #print(cellValue)
+                print(cellValue)
                 if 'website' in productNotOnMaster.keys():
                     productNotOnMaster['website'].append(cellValue)
                 else:
@@ -588,7 +492,7 @@ if __name__ == '__main__':
                     currCell.value = cellValue
         except KeyError:
             prow -= 1
-            #print(itemName)
+            print(itemName)
             if 'pos' in productNotOnMaster.keys():
                 productNotOnMaster['pos'].append(itemName)
             else:
@@ -597,39 +501,11 @@ if __name__ == '__main__':
         prow += 1
                 
             #print(cellValue)
-##################################################################################
-###Repupulates the new SEARS file with the new inventory###        
+        
+
+
     
-    for k,v in searsColNames.items():
-        currCell = searsSheet.cell(row = 1, column = v + 1)
-        currCell.value = k
-         
-    prow = 1
-    for r in range(1, searsRows):
-        try:
-            itemName = searsOGSheet.cell_value(r, searsColNames["Item Id"])
-            quantity = newSearsInv[itemName]
-            for c in range(searsCols):
-                cellValue = searsOGSheet.cell_value(r,c)
-                currCell = searsSheet.cell(row = prow + 1, column = c + 1)
-                if c == searsColNames['Updated Available Quantity']:
-                    currCell.value = quantity
-                     
-                if c != searsColNames['Updated Available Quantity']:
-                    currCell.value = cellValue
-             
-             
-        except KeyError:
-            prow -= 1
-            #print(itemName)
-            if 'sears' in productNotOnMaster.keys():
-                productNotOnMaster['sears'].append(itemName)
-            else:
-                productNotOnMaster['sears'] = [itemName]
-                 
-        prow += 1
-     
-     
+    
                     
 
 
@@ -637,7 +513,7 @@ if __name__ == '__main__':
 
     with open(missingLog, 'w') as missing:
         for k,v in productNotOnMaster.items():
-            missing.write("Missing Id in the  store " + k + "\n")
+            missing.write("Missinf Id in the  store " + k + "\n")
             for item in v:
                 missing.write(item + "\n")
     os.rename(os.path.join(os.getcwd(),missingLog),os.path.join(os.getcwd(), "errors", missingLog))
@@ -647,18 +523,16 @@ if __name__ == '__main__':
 ###HERE IS THE NAMING OF THE FILES###
 
 
-    #print(productNotOnMaster)
+    print(productNotOnMaster)
     amaUpdateFileName = "AmazonInvUpdate.xls"
     ebayUpdateFileName = "EbayInvUpdate.xls"
     webUpdateFileName = "WebInvUpdate.xls"
     posUpdateFileName = "POSInvUpdate.xls"
-    searsUpdateFileName = "SearsInvUpdate.xls"
     
     amaInvUpdateWb.save(amaUpdateFileName)
     ebayInvUpdateWb.save(ebayUpdateFileName)
     webInvUpdateWb.save(webUpdateFileName)
     posInvUpdateWb.save(posUpdateFileName)
-    searsInvUpdateWb.save(searsUpdateFileName)
 
 
 ##################################################################################
@@ -667,11 +541,13 @@ if __name__ == '__main__':
     os.rename(os.path.join(os.getcwd(),ebayUpdateFileName),os.path.join(os.getcwd(), "Updates", ebayUpdateFileName))
     os.rename(os.path.join(os.getcwd(),webUpdateFileName),os.path.join(os.getcwd(), "Updates", webUpdateFileName))
     os.rename(os.path.join(os.getcwd(),posUpdateFileName),os.path.join(os.getcwd(), "Updates", posUpdateFileName))
-    os.rename(os.path.join(os.getcwd(),searsUpdateFileName),os.path.join(os.getcwd(), "Updates", searsUpdateFileName))
-
     
 
     print("Saved updates!")
 
+    
+
+
+    
     
 
