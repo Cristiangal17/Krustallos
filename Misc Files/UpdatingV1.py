@@ -197,22 +197,22 @@ if __name__ == '__main__':
                 if c == columnNames["Sold in Store"]:
                     if inventorySheet.cell_value(r ,c) == 0:
                         soldPos = startAmount - avaliablePos
-                        currentCell.value = soldPos
+                        currentCell.value = avaliablePos
                     
                 if c == columnNames["Sold in Amazon"]:
                     if inventorySheet.cell_value(r ,c) == 0:
                         soldAma = startAmount - avaliableAma
-                        currentCell.value = soldAma
+                        currentCell.value = avaliableAma
                     
                 if c == columnNames["Sold in Ebay"]:
                     if inventorySheet.cell_value(r ,c) == 0:
                         soldEbay = startAmount - avaliableEbay
-                        currentCell.value = soldEbay
+                        currentCell.value = avaliableEbay
                     
                 if c == columnNames["Sold in Website"]:
                     if inventorySheet.cell_value(r ,c) == 0:
                         soldWeb = startAmount - avaliableWeb
-                        currentCell.value = soldWeb
+                        currentCell.value = avaliableWeb
                 
                 if c == columnNames["Total Sold"]:
                     if inventorySheet.cell_value(r ,c) == 0:
@@ -221,11 +221,15 @@ if __name__ == '__main__':
                 if c == columnNames["Final Amount Avaliable"]:
                     currentCell.value = startAmount - totalSold
                 
+                
+                
+                
 
+                    
                     
 
 
-    newWorkbook.save("Inventory.xls")
+    newWorkbook.save("All Inv.xls")
     print("Saved!")
             
     
